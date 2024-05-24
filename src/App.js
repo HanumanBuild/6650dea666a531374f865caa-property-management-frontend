@@ -1,19 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import './App.css';
 import './index.css';
 
 function App() {
+  const [email, setEmail] = useState('');
+
+  // Function to handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios.post(`${process.env.REACT_APP_PROPERTY_MANAGEMENT_BACKEND_URL}/contact`, { email })
+      .then(response => {
+        console.log('Email sent successfully:', response.data);
+      })
+      .catch(error => {
+        console.error('There was an error sending the email:', error);
+      });
+  };
+
   return (
     <div className="App">
       <header className="bg-gray-800 text-white py-20">
         <div className="container mx-auto text-center">
           <h1 className="text-5xl font-bold mb-4">Property Management</h1>
           <p className="text-xl mb-8">We offer 24/7 service to manage your properties efficiently.</p>
-          <form className="flex justify-center">
+          <form className="flex justify-center" onSubmit={handleSubmit}>
             <input
               type="email"
               placeholder="Enter your email"
               className="p-2 rounded-l-lg border-t mr-0 border-b border-l text-gray-800 border-gray-200 bg-white"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <button
               type="submit"
